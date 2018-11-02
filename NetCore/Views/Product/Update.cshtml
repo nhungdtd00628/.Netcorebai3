@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h2>Update</h2>
+<div>
+    <form method="post" action="Edit">
+        <input type="hidden" name="id" value="@Model.id" />
+        <input type="text" name="name" value="@Model.name" placeholder="Name" />
+        <input type="number" name="price" value="@Model.price" placeholder="Price" />
+        <input type="submit"/>
+    </form>
+</div>
+
+

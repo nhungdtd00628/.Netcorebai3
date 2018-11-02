@@ -1,0 +1,73 @@
+﻿@*@model List<Product>*@
+@{
+    ViewData["Title"] = "GetList";
+}
+
+<h2>GetList</h2>
+<p class="alert-success">@TempData["message"]</p>
+<ul>
+    <li>
+        <input type="checkbox" id="check-all" />
+        <span>Checkall</span>
+    </li>
+    @foreach (var product in Model)
+    {
+    <li>
+        <span><input type="checkbox" class="check-item" id="check-id-@product.id" /></span>
+        <span>@product.name - @product.price</span>
+        <a href="/Product/Update?id=@product.id">Edit</a>
+        <a href="#" class="btn-delete" id="@product.id">Delete</a>
+    </li>}
+</ul>
+<button id="delete-all">DeleteAll</button>
+<script>
+    var listBtndelete = document.getElementsByClassName("btn-delete");
+    for (var i = 0; i < listBtndelete.length; i++) {
+        listBtndelete[i].onclick = function () {
+            if (confirm("ban co muon xoa")) {
+                var currentDeleteButton = this;
+                var deleteid = this.id;
+                var xmlHttpRequest = new XMLHttpRequest();
+                xmlHttpRequest.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        alert("xoa thanh cong");
+                        currentDeleteButton.parentElement.remove();
+                    }
+                }
+                xmlHttpRequest.open("DELETE", "/Product/Delete?id=" + deleteid, true);
+                xmlHttpRequest.send();
+            }
+        };
+    }
+    var checkAll = document.getElementById("check-all");
+    var listCheckbox = document.getElementsByClassName("check-item");
+    checkAll.onclick = function () {
+        for (var i = 0; i < listCheckbox.length; i++) {
+            listCheckbox[i].checked = this.checked;
+        }
+    }
+    var deleteAll = document.getElementById("delete-all");
+    deleteAll.onclick = function () {
+        var checkedItems = document.querySelectorAll(".check-item:checked");
+        var deleteids = new Array();
+        for (var i = 0; i < checkedItems.length; i++) {
+            deleteids.push(checkedItems[i].id.replace("check-id-", ""));
+        }
+        console.log(deleteids);
+        if (deleteids.length === 0) {
+            alert("ban co muon xoa?");
+            return;
+        }
+        // call ajax.
+        var xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                alert("xoa thanh cong");
+            }
+        }
+        xmlHttpRequest.open("DELETE", "/Product/DeleteALL?ids=" + deleteids, true);
+        xmlHttpRequest.send();
+    }
+
+</script>
+
